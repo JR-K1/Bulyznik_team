@@ -1,0 +1,53 @@
+# Virtual environment
+env/
+venv/
+.env
+
+# Database
+*.sqlite3
+*.db
+
+# PyCharm
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+media/
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# OS
+.DS_Store
+Thumbs.db
