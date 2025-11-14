@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Практика - Уровень 2 - Bulyznik</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .back-button {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .mineral-display {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .mineral-image {
+            width: 200px;
+            height: 200px;
+            background: #e9ecef;
+            border-radius: 10px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #6c757d;
+        }
+        .checklist-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .checklist-section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .property-group {
+            margin-bottom: 25px;
+        }
+        .property-group h3 {
+            color: #495057;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+        .checklist-item:hover {
+            background: #f8f9fa;
+        }
+        .checklist-item input {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+        .results-section {
+            background: #e8f5e8;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            grid-column: 1 / -1;
+        }
+        .possible-minerals {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .mineral-tag {
+            background: #28a745;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 14px;
+            min-width: 180px;
+        }
+        .mineral-info {
+            background: rgba(255,255,255,0.2);
+            padding: 8px;
+            border-radius: 6px;
+            margin-top: 8px;
+            font-size: 12px;
+            text-align: left;
+        }
+        .loading {
+            color: #6c757d;
+            font-style: italic;
+        }
+        .property-hint {
+            font-size: 12px;
+            color: #6c757d;
+            margin-left: 25px;
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'level_detail' 2 %}" class="back-button">← Назад к теории</a>
+
+    <div class="header">
+        <h1>🔍 Практика: Макроскопическое исследование</h1>
+        <p>Используйте чек-лист для определения неизвестного минерала</p>
+    </div>
+
+    <div class="mineral-display">
+        <div class="mineral-image">
+            📷 Изображение минерала
+        </div>
+        <h2>Неизвестный минерал</h2>
+        <p>Изучите образец и отметьте наблюдаемые свойства</p>
+    </div>
+
+    <div class="checklist-container">
+        <!-- ЛЕВАЯ КОЛОНКА - МАКРОСКОПИЧЕСКИЕ СВОЙСТВА -->
+        <div class="checklist-section">
+            <h2>📋 Макроскопические свойства</h2>
+
+            <div class="property-group">
+                <h3>🎨 Цвет</h3>
+                <div class="checklist-item">
+                    <input type="checkbox" id="color_white" name="color" value="color_white">
+                    <label for="color_white">Белый/бесцветный</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="color_yellow" name="color" value="color_yellow">
+                    <label for="color_yellow">Желтый/латунный</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="color_black" name="color" value="color_black">
+                    <label for="color_black">Черный/серый</label>
+                </div>
+            </div>
+
+            <div class="property-group">
+                <h3>✨ Блеск</h3>
+                <div class="checklist-item">
+                    <input type="checkbox" id="luster_metallic" name="luster" value="luster_metallic">
+                    <label for="luster_metallic">Металлический</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="luster_glassy" name="luster" value="luster_glassy">
+                    <label for="luster_glassy">Стеклянный</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="luster_pearly" name="luster" value="luster_pearly">
+                    <label for="luster_pearly">Перламутровый</label>
+                </div>
+            </div>
+
+            <div class="property-group">
+                <h3>🖊️ Черта</h3>
+                <div class="checklist-item">
+                    <input type="checkbox" id="streak_white" name="streak" value="streak_white">
+                    <label for="streak_white">Белая</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="streak_black" name="streak" value="streak_black">
+                    <label for="streak_black">Черная</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="streak_red" name="streak" value="streak_red">
+                    <label for="streak_red">Красная/вишневая</label>
+                </div>
+            </div>
+
+            <div class="property-group">
+                <h3>🔷 Форма кристалла</h3>
+                <div class="checklist-item">
+                    <input type="checkbox" id="crystal_cubic" name="crystal_system" value="crystal_cubic">
+                    <label for="crystal_cubic">Кубическая</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="crystal_hexagonal" name="crystal_system" value="crystal_hexagonal">
+                    <label for="crystal_hexagonal">Гексагональная</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- ПРАВАЯ КОЛОНКА - КОЛИЧЕСТВЕННЫЕ СВОЙСТВА -->
+        <div class="checklist-section">
+            <h2>📊 Количественные свойства</h2>
+
+            <div class="property-group">
+                <h3>💎 Твердость по Моосу</h3>
+                <div class="checklist-item">
+                    <input type="checkbox" id="hardness_very_soft" name="hardness" value="hardness_very_soft">
+                    <label for="hardness_very_soft">Очень мягкий (1-2.5)</label>
+                </div>
+                <div class="property-hint">Царапается ногтем</div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="hardness_soft" name="hardness" value="hardness_soft">
+                    <label for="hardness_soft">Мягкий (2.5-4)</label>
+                </div>
+                <div class="property-hint">Царапается медной монетой</div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="hardness_medium" name="hardness" value="hardness_medium">
+                    <label for="hardness_medium">Средний (4-6)</label>
+                </div>
+                <div class="property-hint">Царапается стеклом</div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="hardness_hard" name="hardness" value="hardness_hard">
+                    <label for="hardness_hard">Твердый (6-10)</label>
+                </div>
+                <div class="property-hint">Царапает стекло</div>
+            </div>
+
+            <div class="property-group">
+                <h3>⚖️ Плотность</h3>
+                <div class="checklist-item">
+                    <input type="checkbox" id="density_very_light" name="density" value="density_very_light">
+                    <label for="density_very_light">Очень легкий (до 2.5)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="density_light" name="density" value="density_light">
+                    <label for="density_light">Легкий (2.5-4)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="density_medium" name="density" value="density_medium">
+                    <label for="density_medium">Средний (4-5)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="density_heavy" name="density" value="density_heavy">
+                    <label for="density_heavy">Тяжелый (5+)</label>
+                </div>
+            </div>
+
+            <div class="property-group">
+                <h3>🧪 Реакция с HCl</h3>
+                <div class="checklist-item">
+                    <input type="checkbox" id="reaction_acid_yes" name="reaction_acid" value="reaction_acid_yes">
+                    <label for="reaction_acid_yes">Есть реакция (пузырьки)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="reaction_acid_no" name="reaction_acid" value="reaction_acid_no">
+                    <label for="reaction_acid_no">Нет реакции</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- РЕЗУЛЬТАТЫ -->
+        <div class="results-section">
+            <h2>🔍 Возможные минералы: <span id="mineralsCount">4</span></h2>
+            <p>Отмечайте свойства чтобы сузить список кандидатов</p>
+            <div class="possible-minerals" id="possibleMinerals">
+                <div class="loading">Загрузка минералов...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Функция для получения выбранных свойств
+        function getSelectedProperties() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            const selectedProperties = Array.from(checkboxes).map(cb => cb.value);
+            return selectedProperties;
+        }
+
+        // Функция для обновления списка минералов
+        function updatePossibleMinerals() {
+            const selectedProperties = getSelectedProperties();
+            const mineralsContainer = document.getElementById('possibleMinerals');
+            const countElement = document.getElementById('mineralsCount');
+
+            mineralsContainer.innerHTML = '<div class="loading">Фильтрация минералов...</div>';
+
+            fetch('/api/filter-minerals/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    properties: selectedProperties
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    displayMinerals(data.minerals);
+                    countElement.textContent = data.count;
+                } else {
+                    mineralsContainer.innerHTML = '<div class="loading">Ошибка: ' + data.error + '</div>';
+                }
+            })
+            .catch(error => {
+                mineralsContainer.innerHTML = '<div class="loading">Ошибка соединения</div>';
+                console.error('Error:', error);
+            });
+        }
+
+        // Функция для отображения минералов
+        function displayMinerals(minerals) {
+            const mineralsContainer = document.getElementById('possibleMinerals');
+
+            if (minerals.length === 0) {
+                mineralsContainer.innerHTML = '<div class="loading">Минералы не найдены. Попробуйте изменить критерии поиска.</div>';
+                return;
+            }
+
+            let html = '';
+            minerals.forEach(mineral => {
+                html += `
+                    <div class="mineral-tag">
+                        <strong>${mineral.name}</strong>
+                        <div class="mineral-info">
+                            Цвет: ${mineral.color}<br>
+                            Черта: ${mineral.streak}<br>
+                            Блеск: ${mineral.luster}<br>
+                            Твердость: ${mineral.hardness}<br>
+                            Плотность: ${mineral.density}<br>
+                            Реакция с HCl: ${mineral.reaction_with_acid ? 'Да' : 'Нет'}<br>
+                            Система: ${mineral.crystal_system}
+                        </div>
+                    </div>
+                `;
+            });
+
+            mineralsContainer.innerHTML = html;
+        }
+
+        // Обработчики событий для чекбоксов
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updatePossibleMinerals);
+            });
+
+            // Загружаем начальный список минералов
+            updatePossibleMinerals();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Тест - Уровень {{ level.number }} - Bulyznik</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .question {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .question:last-child {
+            border-bottom: none;
+        }
+        .question-text {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #495057;
+        }
+        .answers {
+            margin-left: 20px;
+        }
+        .answer-item {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+        .answer-item:hover {
+            background: #f8f9fa;
+        }
+        .answer-item label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .answer-item input {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+        .submit-btn {
+            display: block;
+            width: 200px;
+            padding: 15px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            margin: 30px auto 0;
+        }
+        .submit-btn:hover {
+            background: #218838;
+        }
+        .submit-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        .result-section {
+            background: #e8f5e8;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .passed {
+            background: #d4edda;
+            color: #155724;
+        }
+        .failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .question-type {
+            font-size: 12px;
+            color: #6c757d;
+            margin-left: 10px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'level_detail' level.number %}" class="back-button">← Назад к уровню</a>
+
+    <div class="header">
+        <h1>📝 Тест: Уровень {{ level.number }}</h1>
+        <p>Проверьте свои знания. Для прохождения нужно набрать 80% правильных ответов.</p>
+
+        {% if previous_result %}
+        <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-top: 15px;">
+            <strong>Предыдущий результат:</strong> {{ previous_result.score }}/{{ previous_result.max_score }}
+            ({{ previous_result.score|floatformat:0 }}%)
+            {% if previous_result.passed %}
+                <span style="color: #28a745;">✓ Пройден</span>
+            {% else %}
+                <span style="color: #dc3545;">✗ Не пройден</span>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    {% if not previous_result or not previous_result.passed %}
+    <form id="testForm">
+        <div class="test-container">
+            {% for question in questions %}
+            <div class="question" data-question-type="{{ question.question_type }}">
+                <div class="question-text">
+                    {{ forloop.counter }}. {{ question.question_text }}
+                    <span class="question-type">
+                        {% if question.question_type == 'single_choice' %}(один вариант){% endif %}
+                        {% if question.question_type == 'multiple_choice' %}(несколько вариантов){% endif %}
+                        {% if question.question_type == 'true_false' %}(верно/неверно){% endif %}
+                    </span>
+                </div>
+
+                <div class="answers">
+                    {% for answer in question.testanswer_set.all %}
+                    <div class="answer-item">
+                        <label>
+                            {% if question.question_type == 'single_choice' or question.question_type == 'true_false' %}
+                            <input type="radio" name="question_{{ question.id }}" value="{{ answer.id }}">
+                            {% else %}
+                            <input type="checkbox" name="question_{{ question.id }}" value="{{ answer.id }}">
+                            {% endif %}
+                            {{ answer.answer_text }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+
+            <button type="submit" class="submit-btn" id="submitBtn">Завершить тест</button>
+        </div>
+    </form>
+
+    <div id="resultContainer" style="display: none;"></div>
+    {% else %}
+    <div class="result-section passed">
+        <h2>🎉 Тест уже пройден!</h2>
+        <p>Вы успешно прошли этот тест с результатом {{ previous_result.score }}/{{ previous_result.max_score }} ({{ previous_result.score|floatformat:0 }}%)</p>
+        <p>Следующий уровень уже доступен!</p>
+        <a href="{% url 'home' %}" class="back-button" style="background: #28a745;">Вернуться на главную</a>
+    </div>
+    {% endif %}
+
+    <script>
+        document.getElementById('testForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Проверка...';
+
+            // Собираем ответы
+            const answers = {};
+            const questions = document.querySelectorAll('.question');
+
+            questions.forEach(question => {
+                const questionId = question.querySelector('input').name.replace('question_', '');
+                const questionType = question.dataset.questionType;
+
+                if (questionType === 'single_choice' || questionType === 'true_false') {
+                    const selected = question.querySelector('input[type="radio"]:checked');
+                    if (selected) {
+                        answers[questionId] = selected.value;
+                    }
+                } else if (questionType === 'multiple_choice') {
+                    const selected = Array.from(question.querySelectorAll('input[type="checkbox"]:checked'))
+                        .map(cb => cb.value);
+                    if (selected.length > 0) {
+                        answers[questionId] = selected;
+                    }
+                }
+            });
+
+            // Отправляем ответы на сервер
+            fetch('/api/level/{{ level.number }}/submit-test/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    answers: answers
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showResults(data);
+                } else {
+                    alert('Ошибка: ' + data.error);
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Завершить тест';
+                }
+            })
+            .catch(error => {
+                alert('Ошибка соединения');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Завершить тест';
+            });
+        });
+
+        function showResults(data) {
+            document.getElementById('testForm').style.display = 'none';
+            const resultContainer = document.getElementById('resultContainer');
+
+            const resultClass = data.passed ? 'passed' : 'failed';
+            const resultMessage = data.passed ?
+                '🎉 Поздравляем! Тест пройден!' :
+                '😔 Тест не пройден. Попробуйте еще раз.';
+
+            resultContainer.innerHTML = `
+                <div class="result-section ${resultClass}">
+                    <h2>${resultMessage}</h2>
+                    <p><strong>Результат:</strong> ${data.score}/${data.max_score} (${data.percentage}%)</p>
+                    <p><strong>Проходной балл:</strong> 80%</p>
+                    ${data.passed ? '<p>Следующий уровень теперь доступен!</p>' : ''}
+                    <div style="margin-top: 20px;">
+                        <a href="{% url 'level_detail' level.number %}" class="back-button">Вернуться к уровню</a>
+                        <a href="{% url 'home' %}" class="back-button" style="background: #28a745;">На главную</a>
+                        ${!data.passed ? '<a href="{% url 'level_practice' level.number %}" class="back-button" style="background: #17a2b8;">Повторить практику</a>' : ''}
+                    </div>
+                </div>
+            `;
+            resultContainer.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

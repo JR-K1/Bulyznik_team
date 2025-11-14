@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Уровень {{ level.number }} - Bulyznik</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .back-button {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .theory-section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .skills-box {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .materials-box {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .start-practice {
+            display: block;
+            width: 200px;
+            padding: 15px;
+            background: #28a745;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 30px auto;
+            font-size: 18px;
+        }
+        .minerals-preview {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .mineral-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            flex: 1;
+            min-width: 150px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'home' %}" class="back-button">← На главную</a>
+
+    <div class="header">
+        <h1>Уровень {{ level.number }}: {{ level.title }}</h1>
+        <div class="skills-box">
+            <strong>Навыки после уровня:</strong><br>
+            {{ level.skills|linebreaks }}
+        </div>
+        <div class="materials-box">
+            <strong>Материалы:</strong><br>
+            {{ level.materials|linebreaks }}
+        </div>
+    </div>
+
+    <div class="theory-section">
+        <h2>Теоретический материал</h2>
+        {{ level.theory_text|linebreaks }}
+
+        {% if level.number == 1 %}
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3>🎯 Основные понятия:</h3>
+            <p><strong>Минерал</strong> — природное химически однородное вещество с упорядоченной структурой (кристаллической).</p>
+            <p><strong>Порода</strong> — агрегат минералов.</p>
+
+            <h3>🔍 Основные признаки минералов:</h3>
+            <ul>
+                <li><strong>Цвет</strong> - внешняя окраска минерала</li>
+                <li><strong>Черта</strong> - цвет порошка минерала</li>
+                <li><strong>Блеск</strong> - металлический, стеклянный, перламутровый</li>
+                <li><strong>Излом</strong> - раковистый, неровный, занозистый</li>
+                <li><strong>Спайность</strong> - способность раскалываться по плоскостям</li>
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if minerals %}
+    <div class="theory-section">
+        <h2>Минералы этого уровня</h2>
+        <div class="minerals-preview">
+            {% for mineral in minerals %}
+            <div class="mineral-card">
+                <h4>{{ mineral.name }}</h4>
+                <p><strong>Цвет:</strong> {{ mineral.color }}</p>
+                <p><strong>Черта:</strong> {{ mineral.streak }}</p>
+                <p><strong>Блеск:</strong>
+                    {% if mineral.luster == 'metallic' %}Металлический{% endif %}
+                    {% if mineral.luster == 'glassy' %}Стеклянный{% endif %}
+                    {% if mineral.luster == 'pearly' %}Перламутровый{% endif %}
+                    {% if mineral.luster == 'greasy' %}Жирный{% endif %}
+                    {% if mineral.luster == 'dull' %}Тусклый{% endif %}
+                </p>
+                <p><strong>Твердость:</strong> {{ mineral.hardness }}</p>
+                <p><strong>Плотность:</strong> {{ mineral.density }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if level.number == 2 %}
+        <a href="{% url 'level_practice' level.number %}" class="start-practice">
+            Перейти к практике 🎮
+        </a>
+    {% else %}
+        <a href="#" class="start-practice">
+            {% if level.number == 1 %}Начать обучение ✅{% else %}Перейти к практике 🎮{% endif %}
+        </a>
+    {% endif %}
+    {% if level.number == 2 %}
+<div style="text-align: center; margin-top: 30px;">
+    <a href="{% url 'level_test' level.number %}" class="start-practice" style="background: #dc3545;">
+        Пройти тест 📝
+    </a>
+</div>
+{% endif %}
+</body>
+</html>
