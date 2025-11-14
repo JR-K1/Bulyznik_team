@@ -20,7 +20,7 @@ env/
 .DS_Store
 Thumbs.db
 
-# Static files (если собираешь статику)
+# Static files
 staticfiles/
 
 # Environment variables
