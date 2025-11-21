@@ -114,7 +114,7 @@
     <a href="{% url 'level_detail' level.number %}" class="back-button">← Назад к уровню</a>
 
     <div class="header">
-        <h1>📝 Тест: Уровень {{ level.number }}</h1>
+        <h1>Тест: Уровень {{ level.number }}</h1>
         <p>Проверьте свои знания. Для прохождения нужно набрать 80% правильных ответов.</p>
 
         {% if previous_result %}
@@ -168,7 +168,7 @@
     <div id="resultContainer" style="display: none;"></div>
     {% else %}
     <div class="result-section passed">
-        <h2>🎉 Тест уже пройден!</h2>
+        <h2>Тест уже пройден!</h2>
         <p>Вы успешно прошли этот тест с результатом {{ previous_result.score }}/{{ previous_result.max_score }} ({{ previous_result.score|floatformat:0 }}%)</p>
         <p>Следующий уровень уже доступен!</p>
         <a href="{% url 'home' %}" class="back-button" style="background: #28a745;">Вернуться на главную</a>
@@ -239,8 +239,8 @@
 
             const resultClass = data.passed ? 'passed' : 'failed';
             const resultMessage = data.passed ?
-                '🎉 Поздравляем! Тест пройден!' :
-                '😔 Тест не пройден. Попробуйте еще раз.';
+                'Поздравляем! Тест пройден!' :
+                'Тест не пройден. Попробуйте еще раз.';
 
             resultContainer.innerHTML = `
                 <div class="result-section ${resultClass}">

@@ -125,13 +125,13 @@
     <a href="{% url 'level_detail' 2 %}" class="back-button">← Назад к теории</a>
 
     <div class="header">
-        <h1>🔍 Практика: Макроскопическое исследование</h1>
+        <h1>Практика: Макроскопическое исследование</h1>
         <p>Используйте чек-лист для определения неизвестного минерала</p>
     </div>
 
     <div class="mineral-display">
         <div class="mineral-image">
-            📷 Изображение минерала
+            Изображение минерала
         </div>
         <h2>Неизвестный минерал</h2>
         <p>Изучите образец и отметьте наблюдаемые свойства</p>
@@ -140,10 +140,10 @@
     <div class="checklist-container">
         <!-- ЛЕВАЯ КОЛОНКА - МАКРОСКОПИЧЕСКИЕ СВОЙСТВА -->
         <div class="checklist-section">
-            <h2>📋 Макроскопические свойства</h2>
+            <h2>Макроскопические свойства</h2>
 
             <div class="property-group">
-                <h3>🎨 Цвет</h3>
+                <h3>Цвет</h3>
                 <div class="checklist-item">
                     <input type="checkbox" id="color_white" name="color" value="color_white">
                     <label for="color_white">Белый/бесцветный</label>
@@ -159,7 +159,7 @@
             </div>
 
             <div class="property-group">
-                <h3>✨ Блеск</h3>
+                <h3>Блеск</h3>
                 <div class="checklist-item">
                     <input type="checkbox" id="luster_metallic" name="luster" value="luster_metallic">
                     <label for="luster_metallic">Металлический</label>
@@ -175,7 +175,7 @@
             </div>
 
             <div class="property-group">
-                <h3>🖊️ Черта</h3>
+                <h3>Черта</h3>
                 <div class="checklist-item">
                     <input type="checkbox" id="streak_white" name="streak" value="streak_white">
                     <label for="streak_white">Белая</label>
@@ -191,7 +191,7 @@
             </div>
 
             <div class="property-group">
-                <h3>🔷 Форма кристалла</h3>
+                <h3>Форма кристалла</h3>
                 <div class="checklist-item">
                     <input type="checkbox" id="crystal_cubic" name="crystal_system" value="crystal_cubic">
                     <label for="crystal_cubic">Кубическая</label>
@@ -205,10 +205,10 @@
 
         <!-- ПРАВАЯ КОЛОНКА - КОЛИЧЕСТВЕННЫЕ СВОЙСТВА -->
         <div class="checklist-section">
-            <h2>📊 Количественные свойства</h2>
+            <h2>Количественные свойства</h2>
 
             <div class="property-group">
-                <h3>💎 Твердость по Моосу</h3>
+                <h3>Твердость по Моосу</h3>
                 <div class="checklist-item">
                     <input type="checkbox" id="hardness_very_soft" name="hardness" value="hardness_very_soft">
                     <label for="hardness_very_soft">Очень мягкий (1-2.5)</label>
@@ -232,7 +232,7 @@
             </div>
 
             <div class="property-group">
-                <h3>⚖️ Плотность</h3>
+                <h3>Плотность</h3>
                 <div class="checklist-item">
                     <input type="checkbox" id="density_very_light" name="density" value="density_very_light">
                     <label for="density_very_light">Очень легкий (до 2.5)</label>
@@ -252,7 +252,7 @@
             </div>
 
             <div class="property-group">
-                <h3>🧪 Реакция с HCl</h3>
+                <h3>Реакция с HCl</h3>
                 <div class="checklist-item">
                     <input type="checkbox" id="reaction_acid_yes" name="reaction_acid" value="reaction_acid_yes">
                     <label for="reaction_acid_yes">Есть реакция (пузырьки)</label>
@@ -266,7 +266,7 @@
 
         <!-- РЕЗУЛЬТАТЫ -->
         <div class="results-section">
-            <h2>🔍 Возможные минералы: <span id="mineralsCount">4</span></h2>
+            <h2>Возможные минералы: <span id="mineralsCount">4</span></h2>
             <p>Отмечайте свойства чтобы сузить список кандидатов</p>
             <div class="possible-minerals" id="possibleMinerals">
                 <div class="loading">Загрузка минералов...</div>

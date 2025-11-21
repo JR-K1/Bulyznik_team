@@ -66,7 +66,7 @@
 
     <div class="levels-list">
     {% for level in levels %}
-    <div class="level-card level-{{ level.status }}"
+    <div class="level-card level-{{ level.status }}">
          {% if level.status == 'available' or level.status == 'completed' %}
          onclick="location.href='{% url 'level_detail' level.number %}'"
          style="cursor: pointer;"
@@ -93,7 +93,7 @@
 <!-- Добавляем модальное окно для заблокированных уровней -->
 <div id="lockedModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
     <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 10px; text-align: center; max-width: 400px;">
-        <h2>🔒 Уровень заблокирован</h2>
+        <h2>Уровень заблокирован</h2>
         <p>Чтобы получить доступ к этому уровню, необходимо сначала завершить предыдущие уровни.</p>
         <button onclick="closeLockedMessage()" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 15px;">
             Понятно
