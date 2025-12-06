@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Лаборатория - Уровень 2</title>
+    <meta charset="UTF-8">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(180deg, #1a237e 0%, #283593 100%);
+        }
+        
+        #lab-container {
+            position: relative;
+            width: 1920px;  /* Ширина всей лаборатории */
+            height: 1080px;
+            margin: 0 auto;
+            overflow: hidden;
+            background: url('/static/game/lab_assets/background.png');
+            background-size: cover;
+        }
+        
+        /* Игрок */
+        #player {
+            position: absolute;
+            width: 80px;
+            height: 120px;
+            background: url('/static/game/lab_assets/player.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            transition: all 0.5s ease;
+            z-index: 100;
+            bottom: 150px;
+            left: 200px;
+        }
+        
+        /* Интерактивные объекты */
+        .lab-object {
+            position: absolute;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .lab-object:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 5px yellow);
+        }
+        
+        /* Стол с инструментами */
+        #work-table {
+            width: 128px;
+            height: 128px;
+            background: url('/static/game/lab_assets/table.png');
+            bottom: 100px;
+            right: 400px;
+        }
+        
+        /* Микроскоп */
+        #microscope {
+            width: 50px;
+            height: 50px;
+            background: url('/static/game/lab_assets/microscope.png');
+            bottom: 250px;
+            left: 800px;
+        }
+        
+        /* Навигационные стрелки */
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+            cursor: pointer;
+            z-index: 1000;
+            transition: background 0.3s;
+        }
+        
+        .nav-arrow:hover {
+            background: rgba(255,255,255,0.6);
+        }
+        
+        #arrow-left {
+            left: 20px;
+        }
+        
+        #arrow-right {
+            right: 20px;
+        }
+        
+        #back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+        
+        /* Диалоговое окно */
+        #dialog-box {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+            z-index: 1001;
+        }
+        
+        #dialog-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid #4CAF50;
+            margin-right: 20px;
+            float: left;
+        }
+        
+        #dialog-text {
+            padding-top: 10px;
+        }
+        
+        #continue-btn {
+            float: right;
+            padding: 8px 16px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Кнопка возврата -->
+    <button id="back-button">← Назад</button>
+    
+    <!-- Стрелки навигации -->
+    <div class="nav-arrow" id="arrow-left">‹</div>
+    <div class="nav-arrow" id="arrow-right">›</div>
+    
+    <!-- Контейнер лаборатории -->
+    <div id="lab-container">
+        <!-- Игрок -->
+        <div id="player"></div>
+        
+        <!-- Интерактивные объекты -->
+        <div class="lab-object" id="work-table" 
+             data-tooltip="Рабочий стол для обработки образцов"
+             data-action="workbench"></div>
+        
+        <div class="lab-object" id="microscope"
+             data-tooltip="Микроскоп для исследования структуры"
+             data-action="microscope"></div>
+        
+        <div class="lab-object" id="acids-shelf"
+             style="width: 200px; height: 250px; bottom: 150px; left: 1200px; background: url('/static/game/lab_assets/acids.png');"
+             data-tooltip="Химические реактивы"
+             data-action="acids"></div>
+        
+        <div class="lab-object" id="notebook-desk"
+             style="width: 180px; height: 150px; bottom: 120px; left: 300px; background: url('/static/game/lab_assets/notebook.png');"
+             data-tooltip="Тетрадь для записей"
+             data-action="notebook"></div>
+    </div>
+    
+    <!-- Диалоговое окно -->
+    <div id="dialog-box">
+        <img id="dialog-avatar" src="/static/game/lab_assets/mentor.png" alt="Наставник">
+        <div id="dialog-text">
+            <h3>Наставник:</h3>
+            <p>Сегодня ты должен изучить эти необычные камни из метеорита. Сначала возьми образец со стола, затем исследуй его свойства с помощью инструментов. Не забудь вести записи в тетради!</p>
+            <button id="continue-btn">Понятно</button>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript для интерактивности
+        document.addEventListener('DOMContentLoaded', function() {
+            const player = document.getElementById('player');
+            const labContainer = document.getElementById('lab-container');
+            const dialogBox = document.getElementById('dialog-box');
+            const continueBtn = document.getElementById('continue-btn');
+            const backButton = document.getElementById('back-button');
+            const arrowLeft = document.getElementById('arrow-left');
+            const arrowRight = document.getElementById('arrow-right');
+            
+            let currentPosition = 0;
+            const scrollAmount = 300;
+            
+            // Показать диалог при загрузке
+            setTimeout(() => {
+                dialogBox.style.display = 'block';
+            }, 1000);
+            
+            // Кнопка "Понятно" в диалоге
+            continueBtn.addEventListener('click', function() {
+                dialogBox.style.display = 'none';
+            });
+            
+            // Кнопка "Назад"
+            backButton.addEventListener('click', function() {
+                window.location.href = "{% url 'home' %}";
+            });
+            
+            // Навигационные стрелки
+            arrowLeft.addEventListener('click', function() {
+                currentPosition += scrollAmount;
+                labContainer.style.transform = `translateX(${currentPosition}px)`;
+            });
+            
+            arrowRight.addEventListener('click', function() {
+                currentPosition -= scrollAmount;
+                labContainer.style.transform = `translateX(${currentPosition}px)`;
+            });
+            
+            // Взаимодействие с объектами
+            document.querySelectorAll('.lab-object').forEach(obj => {
+                obj.addEventListener('click', function() {
+                    const rect = this.getBoundingClientRect();
+                    const objCenterX = rect.left + rect.width / 2;
+                    
+                    // Перемещаем игрока к объекту
+                    player.style.left = `${objCenterX - 40}px`;
+                    
+                    // Показываем подсказку
+                    const tooltip = this.getAttribute('data-tooltip');
+                    alert(`Выбран: ${tooltip}`);
+                    
+                    // Здесь будет логика для разных действий
+                    const action = this.getAttribute('data-action');
+                    handleAction(action);
+                });
+            });
+            
+            
+            
+            // Подсказки при наведении
+            document.querySelectorAll('.lab-object').forEach(obj => {
+                obj.addEventListener('mouseenter', function() {
+                    this.style.filter = 'drop-shadow(0 0 8px yellow)';
+                });
+                
+                obj.addEventListener('mouseleave', function() {
+                    this.style.filter = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

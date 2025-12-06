@@ -136,9 +136,13 @@
     {% endif %}
 
     {% if level.number == 2 %}
+        <a href="{% url 'lab_level_2' %}" class="btn btn-primary">
+        Начать практику в лаборатории
+        </a> 
+    <!-- {% if level.number == 2 %}
         <a href="{% url 'level_practice' level.number %}" class="start-practice">
             Перейти к практике
-        </a>
+        </a> -->
     {% else %}
         <a href="#" class="start-practice">
             {% if level.number == 1 %}Начать обучение ✅{% else %}Перейти к практике 🎮{% endif %}

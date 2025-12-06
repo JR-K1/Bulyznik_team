@@ -41,6 +41,15 @@ def home(request):
 
     return render(request, 'game/home.html', {'levels': levels})
 
+
+
+
+def lab_level_2(request):
+    """Страница лаборатории для уровня 2"""
+    return render(request, 'game/lab_level_2.html')
+
+
+
 def level_detail(request, level_number):
     try:
         level = Level.objects.get(number=level_number)
