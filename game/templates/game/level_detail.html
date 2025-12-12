@@ -135,25 +135,24 @@
     </div>
     {% endif %}
 
+    <!-- Кнопки для перехода к практике -->
     {% if level.number == 2 %}
-        <a href="{% url 'lab_level_2' %}" class="btn btn-primary">
-        Начать практику в лаборатории
-        </a> 
-    <!-- {% if level.number == 2 %}
-        <a href="{% url 'level_practice' level.number %}" class="start-practice">
-            Перейти к практике
-        </a> -->
+        <a href="{% url 'lab_level_2' %}" class="start-practice">
+            Начать практику в лаборатории
+        </a>
     {% else %}
-        <a href="#" class="start-practice">
+        <a href="{% url 'level_practice' level.number %}" class="start-practice">
             {% if level.number == 1 %}Начать обучение ✅{% else %}Перейти к практике 🎮{% endif %}
         </a>
     {% endif %}
+
+    <!-- Кнопка теста (только для уровня 2) -->
     {% if level.number == 2 %}
-<div style="text-align: center; margin-top: 30px;">
-    <a href="{% url 'level_test' level.number %}" class="start-practice" style="background: #dc3545;">
-        Пройти тест
-    </a>
-</div>
-{% endif %}
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="{% url 'level_test' level.number %}" class="start-practice" style="background: #dc3545;">
+            Пройти тест
+        </a>
+    </div>
+    {% endif %}
 </body>
 </html>

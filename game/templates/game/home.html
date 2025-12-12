@@ -68,12 +68,18 @@
     {% for level in levels %}
     <div class="level-card level-{{ level.status }}"
          {% if level.status == 'available' or level.status == 'completed' %}
-         onclick="location.href='{% url 'level_detail' level.number %}'"
+           {% if level.number == 2 %}
+            onclick="location.href='{% url 'lab_level_2' %}'"
+            {% else %}
+            onclick="location.href='{% url 'level_detail' level.number %}'"
+            {% endif %}
          style="cursor: pointer;"
          {% else %}
          onclick="showLockedMessage({{ level.number }})"
          style="cursor: not-allowed;"
          {% endif %}>
+
+
 
         <div class="level-number">Уровень {{ level.number }}</div>
         <div class="level-title">{{ level.title }}</div>
